@@ -12,7 +12,7 @@
 
 from reaktoro import *
 
-db = PhreeqcDatabase.fromFile('databases/phreeqc-toner-catling.dat')
+db = PhreeqcDatabase.fromFile('../databases/phreeqc-toner-catling.dat') # if running from tutorials folder
 
 print("Database content:\n---------------------")
 for species in db.species():
