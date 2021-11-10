@@ -27,7 +27,7 @@ solution.setActivityModel(chain(
 gases = GaseousPhase("CO2(g)")
 gases.setActivityModel(ActivityModelPengRobinson())
 
-minerals = MineralPhases("Fluorapatite Hydroxylapatite")
+minerals = MineralPhases("Fluorapatite Hydroxylapatite Calcite")
 
 system = ChemicalSystem(db, solution, gases, minerals)
 
@@ -41,12 +41,15 @@ state.setSpeciesMass("H2O"     , 1.0 , "kg")
 state.setSpeciesAmount("CO2(g)", 10.0, "mol")
 state.setSpeciesAmount("Na+"   , 4.00, "mol")
 state.setSpeciesAmount("Cl-"   , 4.00, "mol")
+state.setSpeciesAmount("Calcite"        , 10.00, "mol")
+state.setSpeciesAmount("Fluorapatite"   , 10.00, "mol")
+state.setSpeciesAmount("Hydroxylapatite", 10.00, "mol")
 
 solver = EquilibriumSolver(system)
 solver.solve(state)
 
 props = ChemicalProps(state)
-props.output("props.txt")
+print(props)
 
 aprops = AqueousProps(state)
-aprops.output("aprops.txt")
+print(aprops)

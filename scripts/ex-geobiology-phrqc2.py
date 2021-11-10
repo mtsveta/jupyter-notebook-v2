@@ -27,7 +27,12 @@ solution.setActivityModel(chain(
 gases = GaseousPhase("CO2(g)")
 gases.setActivityModel(ActivityModelPengRobinson())
 
-system = ChemicalSystem(db, solution, gases)
+minerals = MineralPhases("Natron Nahcolite Trona Na2CO3:H2O Na2CO3:7H2O")
+
+system = ChemicalSystem(db, solution, gases, minerals)
+print("Chemical system content:\n---------------------")
+for species in db.species():
+    print(species.name())
 
 T = 25.0 # temperature in celsius
 P = 1.0  # pressure in bar
@@ -39,12 +44,17 @@ state.setSpeciesMass("H2O"     , 1.0 , "kg")
 state.setSpeciesAmount("CO2(g)", 10.0, "mol")
 state.setSpeciesAmount("Na+"   , 4.00, "mol")
 state.setSpeciesAmount("Cl-"   , 4.00, "mol")
+state.setSpeciesAmount("Natron"     , 10.00, "mol")
+state.setSpeciesAmount("Nahcolite"  , 10.00, "mol")
+state.setSpeciesAmount("Trona"      , 10.00, "mol")
+state.setSpeciesAmount("Na2CO3:H2O" , 10.00, "mol")
+state.setSpeciesAmount("Na2CO3:7H2O", 10.00, "mol")
 
 solver = EquilibriumSolver(system)
 solver.solve(state)
 
 props = ChemicalProps(state)
-props.output("props.txt")
+print(props)
 
 aprops = AqueousProps(state)
-aprops.output("aprops.txt")
+print(aprops)
