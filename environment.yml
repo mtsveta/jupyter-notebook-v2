@@ -1,0 +1,26 @@
+name: jupyter-notebook-v2
+
+channels:
+  - conda-forge
+
+dependencies:
+  - reaktoro=2
+  - python
+  - numpy
+  - jupyter
+  - jupyterlab
+  - natsort
+  - matplotlib
+  - ffmpeg
+  - pip
+  - pip:
+    - bokeh
+    - pandas
+    - matplotlib
+    - IPython
+    - voila
+  - jupytext  # not required in tutorial
+  - pytest  # not required in tutorial
+  - ipywidgets
+  - nodejs
+  - tqdm
