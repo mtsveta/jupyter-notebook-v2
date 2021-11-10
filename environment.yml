@@ -1,4 +1,4 @@
-name: jupyter-notebook-v2
+name: reaktoro-jupyter-v2
 
 channels:
   - conda-forge
