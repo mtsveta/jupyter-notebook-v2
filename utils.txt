@@ -1,1 +1,16 @@
+To create an environment with `reaktoro` package installed:
 $ conda env create --file environment.yml
+
+To run python scripts:
+$ python path_to_pythonscipt/ex-beginner-equilibrium-phreeqc.py
+
+You can create python script first and then generate a notebook by running:
+$ make
+
+To start jupyterlab locally:
+$ jupyter lab
+
+To safely shutdown Jupyter server:
+$ CTRL + C
+
+
