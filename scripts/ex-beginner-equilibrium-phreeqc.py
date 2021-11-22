@@ -11,7 +11,15 @@
 #       jupytext_version: 1.13.1
 # ---
 
+import os
+
+print(os.path)
+
 from reaktoro import *
+
+import reaktoro
+
+print(reaktoro.__path__[0])
 
 db = PhreeqcDatabase("phreeqc.dat")
 
