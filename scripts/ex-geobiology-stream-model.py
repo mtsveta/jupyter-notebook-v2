@@ -78,20 +78,20 @@ def equilibrate(T, ppCO2):
     return mPO4
 
 
-num_temperatures = 101
-num_co2s = 106
-temperatures = np.linspace(0, 50.0, num=num_temperatures)
-co2ppressures = np.linspace(-4.1, 0.1, num=num_co2s)
+num_temperatures = 11 #101
+num_co2s = 5 #106
+temperatures = np.flip(np.linspace(0, 50.0, num=num_temperatures))
+co2ppressures = np.linspace(-4.1, 0.0, num=num_co2s)
 
-mols_PO4 = np.zeros((num_temperatures, num_co2s))
+mols_PO4 = np.zeros((num_co2s, num_temperatures))
 
 print(temperatures)
 print(co2ppressures)
 
-t_couter = 0
-for T in temperatures:
-    mols_PO4[t_couter, :] = np.array([equilibrate(T, ppCO2) for ppCO2 in co2ppressures])
-    t_couter += 1
+p_couter = 0
+for ppCO2 in co2ppressures:
+    mols_PO4[p_couter, :] = np.array([equilibrate(T, ppCO2) for T in temperatures])
+    p_couter += 1
 
 np.savetxt(results_folder + '/m-PO4.txt', mols_PO4)
 
