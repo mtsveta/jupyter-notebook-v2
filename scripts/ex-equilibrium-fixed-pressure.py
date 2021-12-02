@@ -19,35 +19,34 @@ solution.setActivityModel(chain(
     ActivityModelHKF(),
     ActivityModelDrummond("CO2")
 ))
+gases = GaseousPhase("CO2(g)")
+gases.setActivityModel(ActivityModelPengRobinson())
 
 mineral = MineralPhase("Calcite")
 
-system = ChemicalSystem(db, solution, mineral)
+system = ChemicalSystem(db, solution, mineral, gases)
 
-T = 25.0 # temperature in celsius
-P = 1.0  # pressure in bar
+T = 25.0        # temperature in celsius
+P = 1.0         # pressure in bar
+ppCO2 = -4.0    # partial pressure of CO2
 
 state = ChemicalState(system)
-state.temperature(T, "celsius")
-state.pressure(P, "bar")
 state.set("H2O"    , 1.0 , "kg")
 state.set("Calcite", 10.0, "mol")
+state.set("CO2(g)",  100.0, "mmol")
 
 specs = EquilibriumSpecs(system)
 specs.temperature()
 specs.pressure()
-specs.fugacity("CO2")
 
 solver = EquilibriumSolver(specs)
 
 conditions = EquilibriumConditions(specs)
 conditions.temperature(50.0, "celsius")
-conditions.pressure(1.0, "atm")
-conditions.fugacity("CO2", 10**(4))
+conditions.pressure(10**(ppCO2), "atm")
 
 solver.solve(state, conditions)
 
 props = ChemicalProps(state)
 aprops = AqueousProps(state)
 
-print("pH = ", aprops.pH()[0])
