@@ -41,18 +41,27 @@ solver = EquilibriumSolver(specs)
 
 conditions = EquilibriumConditions(specs)
 
+# USE SOLUTION 1;
+# EQUILIBRIUM_PHASES 1;
+# CO2(g)    -4 100;
+# Hydroxyapatite 0 10 dissolve_only;
+# Fluorapatite 0 10 dissolve_only;
+# Calcite 0 10 dissolve_only;
+# REACTION_TEMPERATURE 1; 50;
+# END
+
 state = ChemicalState(system)
 state.set("H2O", 1.0, "kg")
-state.set("CO2", 100.0, "mmol")
-state.set("Calcite", 10.00, "mmol")
-state.set("Fluorapatite", 10.00, "mmol")
-state.set("Hydroxylapatite", 10.00, "mmol")
+state.set("CO2", 100.0, "mol")
+state.set("Calcite", 10.00, "mol")
+state.set("Fluorapatite", 10.00, "mol")
+state.set("Hydroxylapatite", 10.00, "mol")
 
 def equilibrate(T, ppCO2):
 
     conditions.temperature(T, "celsius")
     conditions.pressure(1.0, "atm")
-    conditions.fugacity("CO2", 10**(ppCO2))
+    conditions.fugacity("CO2", 10**(ppCO2), 'atm')
 
     solver.solve(state, conditions)
 
@@ -64,19 +73,10 @@ def equilibrate(T, ppCO2):
 
 num_temperatures = 3
 num_ppressures = 101
-temperatures = np.flip(np.linspace(0, 50.0, num=num_temperatures))
+temperatures = np.linspace(0, 50.0, num=num_temperatures)
 co2ppressures = np.linspace(-4.0, 0.0, num=num_ppressures)
 
-# num_temperatures = 1 #101
-# num_ppressures = 1 #106
-# temperatures = np.array([50.0])
-# co2ppressures = np.array([-4.0])
-
 pHs = np.zeros((num_ppressures, num_temperatures))
-
-# print(temperatures)
-# print(co2ppressures)
-# input()
 
 p_couter = 0
 for ppCO2 in co2ppressures:
@@ -91,6 +91,7 @@ colors = ['C1', 'C2', 'C3', 'C4', 'C5', 'C7', 'C8', 'C9']
 plt.figure()
 for i in range(0, num_temperatures):
     plt.plot(co2ppressures, pHs[:, i], label=f'{temperatures[i]} C', color=colors[i])
+
 plt.legend(loc="best")
 plt.xlabel('ppCO2')
 plt.ylabel('pH [-]')

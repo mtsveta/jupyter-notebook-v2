@@ -50,7 +50,21 @@ P = 1.0  # pressure in bar
 
 solver = EquilibriumSolver(specs)
 
+opts = EquilibriumOptions()
+opts.epsilon = 1e-14
+solver.setOptions(opts)
+
 conditions = EquilibriumConditions(specs)
+
+# USE SOLUTION 1;
+# EQUILIBRIUM_PHASES 1;
+# CO2(g)   -5 100;
+# Natron    0 0;
+# Nahcolite 0 10;
+# Trona     0 0;
+# Na2CO3:H2O 0 0;
+# Na2CO3:7H2O 0 0;
+# END
 
 state = ChemicalState(system)
 state.set("H2O"        ,  1.0 , "kg")
@@ -59,8 +73,10 @@ state.set("Natron"     ,  0.00, "mol")
 state.set("Trona"      ,  0.00, "mol")
 state.set("Na2CO3:H2O" ,  0.00, "mol")
 state.set("Na2CO3:7H2O",  0.00, "mol")
+state.set("CO2",        100.00, "mol")
 
 def equilibrate(ppCO2, T):
+
     conditions.temperature(T, "celsius")
     conditions.pressure(P, "atm")
     conditions.fugacity("CO2", 10 ** (ppCO2), "bar")
