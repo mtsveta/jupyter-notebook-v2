@@ -14,7 +14,7 @@ from reaktoro import *
 import numpy as np
 import os
 
-results_folder = 'results-phrqc2-pressure-fixed-different-ppCO2'
+results_folder = 'results-phrqc2-fugacity-fixed-different-ppCO2'
 os.system('mkdir -p ' + results_folder)
 
 #db = PhreeqcDatabase.fromFile('../databases/phreeqc-toner-catling.dat') # if running from tutorials folder
@@ -30,12 +30,10 @@ solution.setActivityModel(chain(
     ActivityModelDrummond("CO2")
 ))
 
-gases = GaseousPhase("CO2(g)")
-gases.setActivityModel(ActivityModelPengRobinson())
-
 minerals = MineralPhases("Natron Nahcolite Trona Na2CO3:H2O Na2CO3:7H2O")
 
-system = ChemicalSystem(db, solution, minerals, gases)
+system = ChemicalSystem(db, solution, minerals)
+
 # print("Chemical system content:\n---------------------")
 # for species in db.species():
 #     print(species.name())
@@ -46,25 +44,26 @@ aprops = AqueousProps(system)
 specs = EquilibriumSpecs(system)
 specs.temperature()
 specs.pressure()
+specs.fugacity("CO2")
+
+P = 1.0  # pressure in bar
 
 solver = EquilibriumSolver(specs)
 
 conditions = EquilibriumConditions(specs)
 
+state = ChemicalState(system)
+state.set("H2O"        ,  1.0 , "kg")
+state.set("Nahcolite"  , 10.00, "mol")
+state.set("Natron"     ,  0.00, "mol")
+state.set("Trona"      ,  0.00, "mol")
+state.set("Na2CO3:H2O" ,  0.00, "mol")
+state.set("Na2CO3:7H2O",  0.00, "mol")
+
 def equilibrate(ppCO2, T):
-
     conditions.temperature(T, "celsius")
-    conditions.pressure(10**(ppCO2), "atm")
-
-    state = ChemicalState(system)
-    state.temperature(T, "celsius")
-    state.set("H2O", 1.0, "kg")
-    state.set("Nahcolite", 10.00, "mol")
-    state.set("Natron", 0.00, "mol")
-    state.set("Trona", 0.00, "mol")
-    state.set("Na2CO3:H2O", 0.00, "mol")
-    state.set("Na2CO3:7H2O", 0.00, "mol")
-    state.set("CO2(g)", 100, "mol")
+    conditions.pressure(P, "atm")
+    conditions.fugacity("CO2", 10 ** (ppCO2), "bar")
 
     res = solver.solve(state, conditions)
 
