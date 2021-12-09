@@ -13,6 +13,7 @@
 from reaktoro import *
 import numpy as np
 import os
+import math
 
 results_folder = 'results-phrqc2-fugacity-fixed-different-ppCO2'
 os.system('mkdir -p ' + results_folder)
@@ -48,12 +49,6 @@ specs.fugacity("CO2")
 
 P = 1.0  # pressure in bar
 
-solver = EquilibriumSolver(specs)
-
-opts = EquilibriumOptions()
-opts.epsilon = 1e-14
-solver.setOptions(opts)
-
 conditions = EquilibriumConditions(specs)
 
 # USE SOLUTION 1;
@@ -66,14 +61,11 @@ conditions = EquilibriumConditions(specs)
 # Na2CO3:7H2O 0 0;
 # END
 
-state = ChemicalState(system)
-state.set("H2O"        ,  1.0 , "kg")
-state.set("Nahcolite"  , 10.00, "mol")
-state.set("Natron"     ,  0.00, "mol")
-state.set("Trona"      ,  0.00, "mol")
-state.set("Na2CO3:H2O" ,  0.00, "mol")
-state.set("Na2CO3:7H2O",  0.00, "mol")
-state.set("CO2",        100.00, "mol")
+solver = EquilibriumSolver(specs)
+
+opts = EquilibriumOptions()
+opts.epsilon = 1e-13
+solver.setOptions(opts)
 
 def equilibrate(ppCO2, T):
 
@@ -81,7 +73,20 @@ def equilibrate(ppCO2, T):
     conditions.pressure(P, "atm")
     conditions.fugacity("CO2", 10 ** (ppCO2), "bar")
 
+    state = ChemicalState(system)
+    state.set("H2O", 1.0, "kg")
+    state.set("Nahcolite", 10.00, "mol")
+    state.set("Natron", 0.00, "mol")
+    state.set("Trona", 0.00, "mol")
+    state.set("Na2CO3:H2O", 0.00, "mol")
+    state.set("Na2CO3:7H2O", 0.00, "mol")
+    # state.set("CO2",        100.00, "mol")
+
     res = solver.solve(state, conditions)
+
+    if not res.optima.succeeded:
+        print(f"The optimization solver hasn't converged for T = {T} C and ppCO2 = {ppCO2}")
+        return math.nan, math.nan, math.nan
 
     props.update(state)
     aprops.update(state)
@@ -92,8 +97,12 @@ def equilibrate(ppCO2, T):
 
     return ph, mCO3, mHCO3
 
-num_ppco2s = 8
+num_ppco2s = 71
+#num_ppco2s = 8
 co2ppressures = np.flip(np.linspace(-5.0, 2.0, num=num_ppco2s))
+
+print(co2ppressures)
+input()
 
 data_size = 3
 data50 = np.zeros((num_ppco2s, data_size+1))
