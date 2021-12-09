@@ -80,7 +80,7 @@ def equilibrate(ppCO2, T):
     state.set("Trona", 0.00, "mol")
     state.set("Na2CO3:H2O", 0.00, "mol")
     state.set("Na2CO3:7H2O", 0.00, "mol")
-    # state.set("CO2",        100.00, "mol")
+    state.set("CO2",        100.00, "mol")
 
     res = solver.solve(state, conditions)
 
