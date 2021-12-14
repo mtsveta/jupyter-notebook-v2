@@ -89,7 +89,9 @@ def equilibrate_pure(T, ppCO2):
     state = ChemicalState(system)
     state.set("H2O", 1.0, "kg")
     state.set("CO2", 100, "mol")
-    state.set("Na2(HPO4):7H2O", 10.00, "mol")
+    state.set("Na2(HPO4):12H2O", 10.00, "mol")
+    #state.set("Na2(HPO4):7H2O", 10.00, "mol")
+    #state.set("Na2(HPO4):2H2O", 10.00, "mol") # with this mineral nothing works
 
     res = solver.solve(state, conditions)
 
@@ -120,7 +122,7 @@ def equilibrate_mixed(T, ppCO2):
     state.set("CO2", 100, "mol")
 
     # All the Phosphat species
-    state.set("Na2(HPO4):12H2O", 10.00, "mol")
+    #state.set("Na2(HPO4):12H2O", 10.00, "mol")
     state.set("Na2(HPO4):7H2O", 10.00, "mol")
     # state.set("Na2(HPO4):2H2O", 10.00, "mol") # solver doesn't converge
     # state.set("Na2(HPO4)", 10.00, "mol")
@@ -180,8 +182,8 @@ co2ppressures = np.linspace(-3.5, 0.0, num=num_ppressures)
 #         data0[i, 1] = result[0]
 #         data0[i, 2] = result[1]
 #
-# np.savetxt(results_folder + '/data0.txt', data0)
-# np.savetxt(results_folder + '/data35.txt', data35)
+# np.savetxt(results_folder + '/data0-Na2(HPO4)-12H2O.txt', data0)
+# np.savetxt(results_folder + '/data35-Na2(HPO4)-12H2O.txt', data35)
 #
 # import matplotlib.pyplot as plt
 # colors = ['C1', 'C2', 'C3', 'C4', 'C5', 'C7', 'C8', 'C9']
@@ -194,7 +196,7 @@ co2ppressures = np.linspace(-3.5, 0.0, num=num_ppressures)
 # plt.xlabel('ppCO2')
 # plt.ylabel('pH [-]')
 # plt.grid()
-# plt.savefig(results_folder + '/' + 'pH-vs-ppCO2.png', bbox_inches='tight')
+# plt.savefig(results_folder + '/' + 'pH-vs-ppCO2-pure-Na2(HPO4)-12H2O.png', bbox_inches='tight')
 # plt.close()
 #
 # plt.figure()
@@ -205,7 +207,7 @@ co2ppressures = np.linspace(-3.5, 0.0, num=num_ppressures)
 # plt.xlabel('ppCO2')
 # plt.ylabel('Amount of P [mole]')
 # plt.grid()
-# plt.savefig(results_folder + '/' + 'moleP-vs-ppCO2.png', bbox_inches='tight')
+# plt.savefig(results_folder + '/' + 'moleP-vs-ppCO2-pure-Na2(HPO4)-12H2O.png', bbox_inches='tight')
 # plt.close()
 
 # ##########################################################
@@ -232,8 +234,8 @@ for i in range(0, num_temperatures):
         data0[i, 1] = result[0]
         data0[i, 2] = result[1]
 
-np.savetxt(results_folder + '/data0-mixed.txt', data0)
-np.savetxt(results_folder + '/data35-mixed.txt', data35)
+np.savetxt(results_folder + '/data0-mixed-Na2(HPO4)-7H2O.txt', data0)
+np.savetxt(results_folder + '/data35-mixed-Na2(HPO4)-7H2O.txt', data35)
 
 import matplotlib.pyplot as plt
 colors = ['C1', 'C2', 'C3', 'C4', 'C5', 'C7', 'C8', 'C9']
@@ -243,10 +245,10 @@ plt.plot(temperatures, data0[:, 1], label=f'ppCO2 = 0', color=colors[0])
 plt.plot(temperatures, data35[:, 1], label=f'ppCO2 = -3.5', color=colors[1])
 
 plt.legend(loc="best")
-plt.xlabel('ppCO2')
+plt.xlabel('T [degC]')
 plt.ylabel('pH [-]')
 plt.grid()
-plt.savefig(results_folder + '/' + 'pH-vs-ppCO2-mixed.png', bbox_inches='tight')
+plt.savefig(results_folder + '/' + 'pH-vs-ppCO2-mixed-Na2(HPO4)-7H2O.png', bbox_inches='tight')
 plt.close()
 
 plt.figure()
@@ -254,8 +256,8 @@ plt.plot(temperatures, data0[:, 2], label=f'ppCO2 = 0', color=colors[2])
 plt.plot(temperatures, data35[:, 2], label=f'ppCO2 = -3.5', color=colors[3])
 plt.yscale('log')
 plt.legend(loc="best")
-plt.xlabel('ppCO2')
+plt.xlabel('T [degC]')
 plt.ylabel('Amount of P [mole]')
 plt.grid()
-plt.savefig(results_folder + '/' + 'moleP-vs-ppCO2-mixed.png', bbox_inches='tight')
+plt.savefig(results_folder + '/' + 'moleP-vs-ppCO2-mixed-Na2(HPO4)-7H2O.png', bbox_inches='tight')
 plt.close()
