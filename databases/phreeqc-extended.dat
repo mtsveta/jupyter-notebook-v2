@@ -1253,6 +1253,15 @@ Hydroxylapatite
     Ca5(OH)(PO4)3 = 5Ca+2 + OH- + 3PO4-3
     log_k     -58.517
     -analytical_expression -1.6657 -0.098215 -8219.41 0 0 0
+Nahcolite # From Marion et al. 2011
+    NaHCO3 = HCO3- + Na+
+    -analytic 2.7096628475E+02 4.6935820304E-01 1.5642665039E+01 -1.5204447068E+02 1.6854829142E-01 -3.9508831422E-04
+Trona # From Marion et al. 2011
+    Na3H(CO3)2:2H2O = 3Na+ + HCO3- + CO3-2 + 2H2O
+    -analytic -1.01750000E+00 1.28307435E-02 -9.59229969E+01 -1.39706624E+00 2.82831158E+03 -8.84486220E-07
+Gaylussite
+	CaNa2(CO3)2:5H2O = Ca+2 + 2 CO3-2 + 2 Na+ + 5 H2O
+	log_k	   -9.421
 
 EXCHANGE_MASTER_SPECIES
 	X	X-
