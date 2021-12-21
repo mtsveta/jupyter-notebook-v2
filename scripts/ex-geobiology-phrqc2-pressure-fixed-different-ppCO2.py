@@ -17,7 +17,6 @@ import os
 results_folder = 'results-phrqc2-pressure-fixed-different-ppCO2'
 os.system('mkdir -p ' + results_folder)
 
-#db = PhreeqcDatabase.fromFile('../databases/phreeqc-toner-catling.dat') # if running from tutorials folder
 db = PhreeqcDatabase.fromFile('databases/phreeqc-toner-catling.dat') # if running from tutorials folder
 
 # print("Database content:\n---------------------")
@@ -48,6 +47,10 @@ specs.temperature()
 specs.pressure()
 
 solver = EquilibriumSolver(specs)
+
+opts = EquilibriumOptions()
+opts.epsilon = 1e-13
+solver.setOptions(opts)
 
 conditions = EquilibriumConditions(specs)
 
@@ -143,4 +146,78 @@ plt.ylabel('Amount of HCO3- [mol]')
 plt.grid()
 plt.savefig(results_folder + '/' + 'mHCO3-vs-ppCO2.png', bbox_inches='tight')
 plt.close()
+
+# #
+# Comparison to PHREEQC output
+# #
+
+dataPHREEQC = np.loadtxt(results_folder + '/Phrqc2.sel', skiprows=2)
+
+plt.figure()
+plt.plot(dataPHREEQC[:, 3], dataPHREEQC[:, 0], label=f'pH', color=colors[1])
+plt.legend(loc="best")
+plt.xlabel('ppCO2')
+plt.ylabel('pH [-]')
+plt.grid()
+plt.savefig(results_folder + '/' + 'pH-vs-ppCO2-phreeqc.png', bbox_inches='tight')
+plt.close()
+
+plt.figure()
+plt.plot(dataPHREEQC[:, 3], dataPHREEQC[:, 2], label=f'HCO3', color=colors[1])
+plt.legend(loc="best")
+plt.xlabel('ppCO2')
+plt.ylabel('HCO3 [mol]')
+plt.grid()
+plt.savefig(results_folder + '/' + 'HCO3-vs-ppCO2-phreeqc.png', bbox_inches='tight')
+plt.close()
+
+plt.figure()
+plt.plot(dataPHREEQC[:, 3], dataPHREEQC[:, 1], label=f'CO3-2', color=colors[1])
+plt.legend(loc="best")
+plt.xlabel('ppCO2')
+plt.ylabel('CO3-2 [mol]')
+plt.grid()
+plt.savefig(results_folder + '/' + 'CO3-vs-ppCO2-phreeqc.png', bbox_inches='tight')
+plt.close()
+
+# comparison plots
+def line_filled_marker(color):
+    return {'color': color, 'markersize': 6, 'markeredgewidth': 1.5 }
+
+plt.figure()
+plt.plot(data0[:, 0], data25[:, 1], label=f'Reaktoro', color=colors[2])
+plt.plot(dataPHREEQC[0:-1:2, 3], dataPHREEQC[0:-1:2, 0], 'D', **line_filled_marker(colors[2]))
+plt.plot([], [], 'D', label='PHREEQC', **line_filled_marker(colors[2]))
+plt.legend(loc="best")
+plt.xlabel('ppCO2')
+plt.ylabel(f'pH [-]')
+plt.title(f'pH at 25 C')
+plt.grid()
+plt.savefig(results_folder + '/' + 'reaktoro-phreeqc-pH-vs-ppC02.png', bbox_inches='tight')
+plt.close('all')
+
+plt.figure()
+plt.plot(data0[:, 0], data25[:, 2], label=f'Reaktoro', color=colors[4])
+plt.plot(dataPHREEQC[0:-1:2, 3], dataPHREEQC[0:-1:2, 1], 'D', **line_filled_marker(colors[4]))
+plt.plot([], [], 'D', label='PHREEQC', **line_filled_marker(colors[4]))
+plt.legend(loc="best")
+plt.xlabel('ppCO2')
+plt.ylabel(f'CO3-2 [mol]')
+plt.title(f'Amount of CO3-2 at 25 C')
+plt.grid()
+plt.savefig(results_folder + '/' + 'reaktoro-phreeqc-CO3-vs-ppC02.png', bbox_inches='tight')
+plt.close('all')
+
+plt.figure()
+plt.plot(data0[:, 0], data25[:, 3], label=f'Reaktoro', color=colors[6])
+plt.plot(dataPHREEQC[0:-1:2, 3], dataPHREEQC[0:-1:2, 2], 'D', **line_filled_marker(colors[6]))
+plt.plot([], [], 'D', label='PHREEQC', **line_filled_marker(colors[6]))
+plt.legend(loc="best")
+plt.xlabel('ppCO2')
+plt.ylabel(f'HCO3- [mol]')
+plt.title(f'Amount of HCO3- at 25 C')
+plt.grid()
+plt.savefig(results_folder + '/' + 'reaktoro-phreeqc-HCO3-vs-ppC02.png', bbox_inches='tight')
+plt.close('all')
+
 
